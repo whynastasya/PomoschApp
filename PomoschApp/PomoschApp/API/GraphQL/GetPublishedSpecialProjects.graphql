@@ -1,0 +1,10 @@
+query GetPublishedSpecialProjects {
+    specialProjects {
+    nodes {
+    title
+    images {
+    url
+}
+}
+}
+}

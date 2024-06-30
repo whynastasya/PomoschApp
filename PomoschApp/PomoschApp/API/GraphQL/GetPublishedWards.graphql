@@ -1,0 +1,14 @@
+query GetPublishedWards {
+ wards {
+  nodes {
+  publicInformation {
+  name {
+  fullName
+}
+photo {
+url
+}
+}
+}
+}
+}
