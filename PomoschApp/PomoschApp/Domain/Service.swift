@@ -18,52 +18,69 @@ class Service {
         apollo = ApolloClient(url: url)
     }
     
-    func getSpecialProjects(completion: @escaping ([SpecialProject]) -> Void) {
-        apollo.fetch(query: GetPublishedSpecialProjectsQuery()) { result in
+    func getSpecialProjects(pageSize: Int, offset: String? = nil, completion: @escaping ([SpecialProject], String?) -> Void) {
+        let graphQLPageSize = GraphQLNullable<Int>(integerLiteral: pageSize)
+        let graphQLOffset = offset != nil ? GraphQLNullable<String>(stringLiteral: offset!): nil
+        
+        apollo.fetch(query: GetPublishedSpecialProjectsQuery(first: graphQLPageSize, after: graphQLOffset)) { result in
             switch result {
-                case .success(let response):
-                    var specialProjects: [SpecialProject] = []
-                    if let nodes = response.data?.specialProjects?.nodes {
-                        for project in nodes {
-                            let title = project.title
-                            let imageUrls = project.images.map { $0.url }
-                            let specialProject = SpecialProject(title: title, imagesURL: imageUrls)
-                            specialProjects.append(specialProject)
-                        }
-                        completion(specialProjects)
-                    } else {
-                        print("No special projects found")
-                        completion(specialProjects)
+            case .success(let response):
+                var specialProjects: [SpecialProject] = []
+                var nextCursor: String? = nil
+                
+                if let nodes = response.data?.specialProjects?.nodes {
+                    for project in nodes {
+                        let title = project.title
+                        let imageUrls = project.images.map { $0.url }
+                        let specialProject = SpecialProject(title: title, imagesURL: imageUrls)
+                        specialProjects.append(specialProject)
                     }
-                case .failure(let error):
-                    print("Error fetching special projects: \(error)")
-                    completion([])
+                }
+                    
+                if let pageInfo = response.data?.specialProjects?.pageInfo {
+                    nextCursor = pageInfo.endCursor
+                }
+                
+                completion(specialProjects, nextCursor)
+                
+            case .failure(let error):
+                print("Error fetching special projects: \(error)")
+                completion([], nil)
             }
         }
     }
     
-    func getWards(completion: @escaping ([Ward]) -> Void) {
-        apollo.fetch(query: GetPublishedWardsQuery()) { result in
+    func getWards(pageSize: Int, after: String? = nil, completion: @escaping ([Ward], String?) -> Void) {
+        let graphQLPageSize = GraphQLNullable<Int>(integerLiteral: pageSize)
+        let graphQLAfter = after != nil ? GraphQLNullable<String>(stringLiteral: after!) : nil
+        
+        apollo.fetch(query: GetPublishedWardsQuery(first: graphQLPageSize, after: graphQLAfter)) { result in
             switch result {
-                case .success(let response):
-                    var wards: [Ward] = []
-                    if let nodes = response.data?.wards?.nodes {
-                        for ward in nodes {
-                            let fullName = ward.publicInformation.name.fullName
-                            let photoUrl = ward.publicInformation.photo.url
-                            let wardObject = Ward(fullName: fullName, photoURL: photoUrl)
-                            wards.append(wardObject)
-                        }
-                        completion(wards)
-                    } else {
-                        print("No wards found")
-                        completion(wards)
+            case .success(let response):
+                var wards: [Ward] = []
+                var nextCursor: String? = nil
+                
+                if let nodes = response.data?.wards?.nodes {
+                    for ward in nodes {
+                        let fullName = ward.publicInformation.name.fullName
+                        let photoUrl = ward.publicInformation.photo.url
+                        let wardObject = Ward(fullName: fullName, photoURL: photoUrl)
+                        wards.append(wardObject)
                     }
-                case .failure(let error):
-                    print("Error fetching wards: \(error)")
-                    completion([])
+                }
+                
+                if let pageInfo = response.data?.wards?.pageInfo {
+                    nextCursor = pageInfo.endCursor
+                    print(nextCursor)
+                }
+               
+                
+                completion(wards, nextCursor)
+                
+            case .failure(let error):
+                print("Error fetching wards: \(error)")
+                completion([], nil)
             }
         }
     }
 }
-

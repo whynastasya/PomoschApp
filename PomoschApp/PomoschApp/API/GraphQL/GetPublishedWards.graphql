@@ -1,14 +1,24 @@
-query GetPublishedWards {
- wards {
-  nodes {
-  publicInformation {
-  name {
-  fullName
-}
-photo {
-url
-}
-}
-}
-}
+query GetPublishedWards($first: Int, $after: String) {
+  wards(
+    first: $first  # Number of items to fetch
+    after: $after  # Cursor for pagination
+  ) {
+    nodes {  # List of nodes (wards)
+      publicInformation {
+        name {
+          fullName  # Full name of the ward
+        }
+        photo {
+          url  # URL of the ward's photo
+        }
+      }
+    }
+    pageInfo {  # Pagination information
+      hasNextPage  # Indicates if there is a next page
+      hasPreviousPage  # Indicates if there is a previous page
+      startCursor  # Cursor for the start of the current page
+      endCursor  # Cursor for the end of the current page
+    }
+    totalCount  # Total count of wards in the connection
+  }
 }

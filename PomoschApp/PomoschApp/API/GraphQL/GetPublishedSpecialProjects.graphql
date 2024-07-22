@@ -1,10 +1,20 @@
-query GetPublishedSpecialProjects {
-    specialProjects {
-    nodes {
-    title
-    images {
-    url
-}
-}
-}
+query GetPublishedSpecialProjects($first: Int, $after: String) {
+  specialProjects(
+    first: $first  # Number of items to fetch
+    after: $after  # Cursor for pagination
+  ) {
+    nodes {  # List of nodes (special projects)
+      title  # Title of the special project
+      images {  # List of images for the special project
+        url  # URL of each image
+      }
+    }
+    pageInfo {  # Pagination information
+      hasNextPage  # Indicates if there is a next page
+      hasPreviousPage  # Indicates if there is a previous page
+      startCursor  # Cursor for the start of the current page
+      endCursor  # Cursor for the end of the current page
+    }
+    totalCount  # Total count of special projects in the connection
+  }
 }

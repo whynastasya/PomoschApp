@@ -27,6 +27,7 @@ public enum SchemaMetadata: ApolloAPI.SchemaMetadata {
     case "Nomen": return PomoschAPI.Objects.Nomen
     case "FileInformation": return PomoschAPI.Objects.FileInformation
     case "FileUploadInformation": return PomoschAPI.Objects.FileUploadInformation
+    case "PageInfo": return PomoschAPI.Objects.PageInfo
     case "SpecialProjectsConnection": return PomoschAPI.Objects.SpecialProjectsConnection
     case "SpecialProject": return PomoschAPI.Objects.SpecialProject
     case "LimitedLiabilityCompanyReport": return PomoschAPI.Objects.LimitedLiabilityCompanyReport

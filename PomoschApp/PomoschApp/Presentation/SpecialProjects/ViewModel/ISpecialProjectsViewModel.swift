@@ -7,5 +7,5 @@
 
 protocol ISpecialProjectsViewModel: AnyObject {
     var specialProjects: [SpecialProject] { get set }
-    func fetchSpecialProjects(completion: @escaping () -> Void)
+    func fetchNextPage(completion: @escaping () -> Void)
 }

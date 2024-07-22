@@ -12,11 +12,13 @@ class TabBarController: UITabBarController {
         super.viewDidLoad()
 
         let wardsViewController = WardsViewController()
-        wardsViewController.tabBarItem = UITabBarItem(title: "Wards", image: UIImage(systemName: "person.3"), tag: 0)
+        let wardsNavigationController = UINavigationController(rootViewController: wardsViewController)
+        wardsNavigationController.tabBarItem = UITabBarItem(title: "Подопечные", image: UIImage(systemName: "person.3"), tag: 0)
 
         let specialProjectsViewController = SpecialProjectsViewController()
-        specialProjectsViewController.tabBarItem = UITabBarItem(title: "Projects", image: UIImage(systemName: "star"), tag: 1)
+        let specialProjectsNavigationController = UINavigationController(rootViewController: specialProjectsViewController)
+        specialProjectsNavigationController.tabBarItem = UITabBarItem(title: "Проекты", image: UIImage(systemName: "star"), tag: 1)
 
-        viewControllers = [wardsViewController, specialProjectsViewController]
+        viewControllers = [wardsNavigationController, specialProjectsNavigationController]
     }
 }

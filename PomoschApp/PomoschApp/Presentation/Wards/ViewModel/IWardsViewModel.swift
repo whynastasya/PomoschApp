@@ -7,5 +7,9 @@
 
 protocol IWardsViewModel: AnyObject {
     var wards: [Ward] { get set }
+    var filteredWards: [Ward] { get set }
+    
     func fetchWards(completion: @escaping () -> Void)
+    func filterWards(by searchText: String)
+    func changeSortOrder(to newSortOrder: SortOrder)
 }
